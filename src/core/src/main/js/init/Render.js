@@ -60,6 +60,14 @@ define(
         settings.plugins += ' ' + name;
       });
 
+      var pluginsUrl = settings.plugins_prefix_url;
+
+      if (pluginsUrl) {
+        pluginsUrl = editor.documentBaseURI.toAbsolute(pluginsUrl) + '/plugins/';
+      } else {
+        pluginsUrl = 'plugins/';
+      }
+
       Tools.each(settings.plugins.split(/[ ,]/), function (plugin) {
         plugin = Tools.trim(plugin);
 
@@ -71,9 +79,9 @@ define(
 
             Tools.each(dependencies, function (dep) {
               var defaultSettings = {
-                prefix: 'plugins/',
+                prefix: pluginsUrl,
                 resource: dep,
-                suffix: '/plugin' + suffix + '.js'
+                suffix: '/plugin' + suffix + (settings.use_min ? '.min' : '') + '.js'
               };
 
               dep = PluginManager.createUrl(defaultSettings, dep);
@@ -81,9 +89,9 @@ define(
             });
           } else {
             PluginManager.load(plugin, {
-              prefix: 'plugins/',
+              prefix: pluginsUrl,
               resource: plugin,
-              suffix: '/plugin' + suffix + '.js'
+              suffix: '/plugin' + suffix + (settings.use_min ? '.min' : '') + '.js'
             });
           }
         }
